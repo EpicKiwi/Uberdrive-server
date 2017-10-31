@@ -1,0 +1,47 @@
+{
+  "author": "EpicKiwi <me@epickiwi.fr>",
+  "name": "uberdrive-server",
+  "description": "Le serveur API de l'application Uberdrive",
+  "version": "0.0.1",
+  "license": "GPLV3",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EpicKiwi/Uberdrive-server.git"
+  },
+  "engines": {
+    "node": ">=4.0.0"
+  },
+  "dependencies": {
+    "actionhero": "17.0.2",
+    "ws": "latest",
+    "fakeredis": "latest",
+    "ioredis": "latest"
+  },
+  "devDependencies": {
+    "cross-env": "latest",
+    "chai": "latest",
+    "dirty-chai": "latest",
+    "mocha": "latest",
+    "standard": "latest"
+  },
+  "scripts": {
+    "start": "actionhero start",
+    "actionhero": "actionhero",
+    "pretest": "standard",
+    "test": "cross-env NODE_ENV=test mocha"
+  },
+  "standard": {
+    "ignore": [
+      "public/javascript/actionheroClient.*"
+    ],
+    "globals": [
+      "describe",
+      "before",
+      "beforeEach",
+      "after",
+      "afterEach",
+      "it",
+      "expect"
+    ]
+  }
+}
