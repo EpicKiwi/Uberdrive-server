@@ -7,6 +7,7 @@ module.exports = {
   startPriority: 1000,
   stopPriority: 1000,
   initialize: function (api, next) {
+      console.log("Graphdb")
     api.graphdb = {
         host: "bolt://localhost",
         username: "neo4j",
