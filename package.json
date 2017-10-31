@@ -13,9 +13,10 @@
   },
   "dependencies": {
     "actionhero": "17.0.2",
-    "ws": "latest",
     "fakeredis": "latest",
-    "ioredis": "latest"
+    "ioredis": "latest",
+    "neo4j-driver": "^1.5.0",
+    "ws": "latest"
   },
   "devDependencies": {
     "cross-env": "latest",
