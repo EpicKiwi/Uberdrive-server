@@ -18,8 +18,8 @@ module.exports = {
         return api.graphdb.connection.session()
     }
 
-    api.graphdb.mapRecords = function mapRecords(dbResult){
-        return dbResult.records.map((el)=>{
+    api.graphdb.mapRecords = function mapRecords(dbResult,additionnalCallback){
+        return dbResult.records.map((el,index,recordList)=>{
             let record = {}
             Object.keys(el["_fields"][0]["properties"]).forEach((key)=>{
                 let property =  el["_fields"][0]["properties"][key]
@@ -32,6 +32,8 @@ module.exports = {
                         break;
                 }
             })
+            if(additionnalCallback)
+                additionnalCallback(record,el,index,recordList)
             return record
         })
     }
