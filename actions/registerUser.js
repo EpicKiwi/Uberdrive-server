@@ -11,6 +11,7 @@ exports.action = {
   version: 1.0,
   toDocument: true,
   middleware: [],
+  authentication: false,
 
   inputs: {
       username: {

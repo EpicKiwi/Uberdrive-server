@@ -77,7 +77,10 @@ module.exports = {
     const authenticationMiddleware = {
           name: "authentication",
           global: true,
+          priority: 1010,
           preProcessor: async (data,next)=>{
+            if(data.actionTemplate.authentication === false)
+              return next(null)
             if(!data.params.token){
                 return next(new Error("This api require a authentication token in parameter 'token'"))
             }
