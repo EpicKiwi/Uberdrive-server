@@ -14,6 +14,13 @@ module.exports = {
         return api.graphdb.mapRecords(rawPlanets)
     }
 
+      api.planets.getOne = async function getAllPlanets(planetName){
+          let session = api.graphdb.getSession()
+          let rawPlanets = await session.run("MATCH (p:Planet) WHERE p.name = \""+planetName+"\" RETURN p")
+          session.close()
+          return api.graphdb.mapRecords(rawPlanets)[0]
+      }
+
     api.planets.getConnected = async function getConnectedPlanets(initialPlanetName){
         let session = api.graphdb.getSession()
         let rawPlanets = await session.run(`MATCH (n:Planet {name: "${initialPlanetName}"})-[r:Bridge*]-(p:Planet) 
