@@ -20,22 +20,27 @@ module.exports = {
 
     api.graphdb.mapRecords = function mapRecords(dbResult,additionnalCallback){
         return dbResult.records.map((el,index,recordList)=>{
-            let record = {}
-            Object.keys(el["_fields"][0]["properties"]).forEach((key)=>{
-                let property =  el["_fields"][0]["properties"][key]
-                switch(typeof property) {
-                    case "object":
-                        record[key] = property.low
-                        break;
-                    default:
-                        record[key] = property
-                        break;
-                }
-            })
+            let record = api.graphdb.mapNode(el["_fields"][0])
             if(additionnalCallback)
                 additionnalCallback(record,el,index,recordList)
             return record
         })
+    }
+
+    api.graphdb.mapNode = function mapNode(rawField){
+        let record = {}
+        Object.keys(rawField["properties"]).forEach((key)=>{
+            let property =  rawField["properties"][key]
+            switch(typeof property) {
+                case "object":
+                    record[key] = property.low
+                    break;
+                default:
+                    record[key] = property
+                    break;
+            }
+        })
+        return record
     }
 
     return next()
