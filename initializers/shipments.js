@@ -75,7 +75,7 @@ module.exports = {
           return api.shipments.mapShipmentRecord(rawShipments.records[0])
       }
 
-      api.shipments.simulate = async function getOneShipment(fromplanetName,toPlanetName,spaceshipName){
+      api.shipments.simulate = async function simulateShipment(fromplanetName,toPlanetName,spaceshipName){
           let session = api.graphdb.getSession()
           let rawShipments = await session.run(`MATCH (fromPlanet:Planet), 
                                                       (toPlanet:Planet), 
@@ -112,6 +112,41 @@ module.exports = {
           })
           record.totalPrice = record.distance*record.starship.price
           return record
+      }
+
+      api.shipments.create = async function createShipment(username,fromplanetName,toPlanetName,spaceshipName){
+          let session = api.graphdb.getSession()
+          let rawShipments = await session.run(`MATCH (user:User),
+                                                      (fromPlanet:Planet {name:"${fromplanetName}"}), 
+                                                      (toPlanet:Planet {name:"${toPlanetName}"}), 
+                                                      (spaceship:Ship {name:"${spaceshipName}"}),
+                                                      journey=shortestPath((fromPlanet)-[path:Bridge*]-(toPlanet))
+                                               WHERE user.name =~ "(?ui)${username}"
+                                               CREATE  (shipment:Shipment),
+                                                       (shipment)<-[:AskFor]-(user),
+                                                       (shipment)-[:From]->(fromPlanet),
+                                                       (shipment)-[:To]->(toPlanet),
+                                                       (shipment)-[:With]->(spaceship)
+                                               RETURN id(shipment)`)
+          rawShipments = await session.run(`MATCH     (shipment:Shipment), 
+                                                      (shipment)-[:AskFor]-(user:User), 
+                                                      (shipment)-[:From]-(fromPlanet:Planet), 
+                                                      (shipment)-[:To]-(toPlanet:Planet), 
+                                                      (shipment)-[:With]-(spaceship:Ship),
+                                                      journey=shortestPath((fromPlanet)-[path:Bridge*]-(toPlanet))
+                                               WHERE id(shipment) = ${rawShipments.records[0]["_fields"][0].low}
+                                               UNWIND path as pathr 
+                                               RETURN user, 
+                                                      fromPlanet, 
+                                                      toPlanet, 
+                                                      spaceship, 
+                                                      sum(pathr.distance) as distance,
+                                                      journey,
+                                                      id(shipment)`)
+          session.close()
+          if(rawShipments.records.length < 1)
+              throw new Error("Unable to find a correct path to simulate this shipment")
+          return api.shipments.mapShipmentRecord(rawShipments.records[0])
       }
 
     return next()
