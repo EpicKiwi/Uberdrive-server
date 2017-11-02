@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 Type=simple
-WorkingDirectory=/home/uberdrive/uberdrive-server
+WorkingDirectory=/home/uberdrive/Uberdrive-server
 ExecStart=/usr/bin/npm start
 
 User=xa
