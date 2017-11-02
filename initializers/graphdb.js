@@ -8,7 +8,7 @@ module.exports = {
   stopPriority: 1000,
   initialize: function (api, next) {
     api.graphdb = {
-        host: "bolt://localhost",
+        host: "bolt://127.0.0.1/",
         username: "neo4j",
         password: "kiwi",
         connection: null
@@ -46,8 +46,9 @@ module.exports = {
     return next()
   },
   start: function (api, next) {
-    api.graphdb.connection = neo4j.driver(api.graphdb.host, neo4j.auth.basic(api.graphdb.username,api.graphdb.password))
-    return next()
+    api.log("Connecting to database")
+      api.graphdb.connection = neo4j.driver(api.graphdb.host, neo4j.auth.basic(api.graphdb.username,api.graphdb.password))
+      return next()
   },
   stop: function (api, next) {
       api.graphdb.connection.close()
