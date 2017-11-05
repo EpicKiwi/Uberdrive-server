@@ -74,6 +74,15 @@ module.exports = {
         })[0]
     }
 
+      api.users.setLocation = async function setUserLocation(username,planetName){
+          let session = api.graphdb.getSession()
+          let rawUser = await session.run(`MATCH (u:User),(p:Planet) WHERE u.name =~ "(?ui)${username}" AND p.name = "${planetName}"  OPTIONAL MATCH (u)-[r:LocatedOn]->(l:Planet) DELETE r CREATE (u)-[:LocatedOn]->(p) RETURN u,l`)
+          if(rawUser.records.length < 1)
+              return false
+          session.close()
+          return true
+      }
+
     const authenticationMiddleware = {
           name: "authentication",
           global: true,

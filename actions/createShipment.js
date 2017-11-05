@@ -36,7 +36,12 @@ exports.action = {
               data.response.jounrey = result.jounrey
               data.response.totalPrice = result.totalPrice
               data.response.shipmentId = result.shipmentId
-              return next(null)
+              api.users.setLocation(result.user.name,result.to.name)
+              .then(()=>{
+                  return next(null)
+              }).catch(()=>{
+                  return next(null)
+              })
           }).catch((error)=>{
           return next(error)
       })

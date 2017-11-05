@@ -30,7 +30,27 @@ exports.action = {
       data.response.username = result.username
       data.response.token = result.token
       data.response.restrictedIp = result.ip
-      return next(null)
+      api.log("Hello")
+        api.users.getByName(result.username)
+        .then((user)=>{
+            if(user.location){
+                return next(null)
+            }
+            api.planets.getAll()
+                .then((planets)=>{
+                let planet = planets[Math.round(Math.random()*planets.length)];
+                api.users.setLocation(result.username,planet.name)
+                .then(()=>{
+                  return next(null)
+                }).catch(()=>{
+                  return next(null)
+                })
+            }).catch(()=>{
+                return next(null)
+            })
+        }).catch(()=>{
+            return next(null)
+        })
     }).catch((error)=>{
       return next(error)
     })
