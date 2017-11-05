@@ -8,7 +8,7 @@ module.exports = {
   stopPriority: 1000,
   initialize: function (api, next) {
     api.graphdb = {
-        host: "bolt://db/",
+        host: "bolt://127.0.0.1/",
         username: "neo4j",
         password: "kiwi",
         connection: null
